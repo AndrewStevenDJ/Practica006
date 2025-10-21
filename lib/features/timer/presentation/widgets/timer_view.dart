@@ -21,7 +21,9 @@ class TimerView extends StatelessWidget {
           final isPortrait = constraints.maxHeight > constraints.maxWidth;
           return Stack(
             children: [
-              const Background(),
+              Positioned.fill(
+                child: const Background(),
+              ),
               _TimerView(
                 isPortrait: isPortrait,
                 maxHeight: constraints.maxHeight,
@@ -57,44 +59,37 @@ class _TimerView extends StatelessWidget {
 
     if (isPortrait) {
       // Layout vertical
-      return SingleChildScrollView(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: maxHeight),
-          child: IntrinsicHeight(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                const Spacer(flex: 1),
-                BlocBuilder<TimerBloc, TimerState>(
-                  builder: (context, state) {
-                    return GestureDetector(
-                      onTap: state is TimerInitial
-                          ? () async {
-                              final duration = await _showDurationInputDialog(context);
-                              if (duration != null && context.mounted) {
-                                context.read<TimerBloc>().add(TimerStarted(duration: duration));
-                              }
-                            }
-                          : null,
-                      child: TimerProgressIndicator(size: indicatorSize),
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-                const ActionsButtons(),
-                const SizedBox(height: 10),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    constraints: BoxConstraints(maxHeight: maxHeight * 0.3),
-                    child: const LapsView(),
-                  ),
-                ),
-              ],
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const Spacer(flex: 1),
+          BlocBuilder<TimerBloc, TimerState>(
+            builder: (context, state) {
+              return GestureDetector(
+                onTap: state is TimerInitial
+                    ? () async {
+                        final duration = await _showDurationInputDialog(context);
+                        if (duration != null && context.mounted) {
+                          context.read<TimerBloc>().add(TimerStarted(duration: duration));
+                        }
+                      }
+                    : null,
+                child: TimerProgressIndicator(size: indicatorSize),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          const ActionsButtons(),
+          const SizedBox(height: 10),
+          Expanded(
+            flex: 2,
+            child: Container(
+              constraints: BoxConstraints(maxHeight: maxHeight * 0.3),
+              child: const LapsView(),
             ),
           ),
-        ),
+        ],
       );
     } else {
       // Layout horizontal
