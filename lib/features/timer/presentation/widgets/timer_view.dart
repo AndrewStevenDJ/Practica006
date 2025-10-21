@@ -166,9 +166,8 @@ Future<int?> _showDurationInputDialog(BuildContext context) async {
           body: Center(
             child: SingleChildScrollView(
               child: Container(
-              constraints: BoxConstraints(
+              constraints: const BoxConstraints(
                 maxWidth: 320,
-                maxHeight: isLandscape ? 165 : 220,
               ),
               decoration: BoxDecoration(
                 color: Theme.of(context).dialogBackgroundColor,
